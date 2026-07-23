@@ -1,13 +1,13 @@
-@model IEnumerable<libraryMVC.Models.Book>
+@model IEnumerable<libraryMVC.Models.Author>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Authors";
 }
 
 <div class="d-flex justify-content-between align-items-center mb-3">
     <div>
-        <h2 class="mb-0">Books</h2>
-        <p class="text-muted small mb-0">Book Inventory Management</p>
+        <h2 class="mb-0">Authors</h2>
+        <p class="text-muted small mb-0">Author directory and management</p>
     </div>
     <a asp-action="Create" class="btn btn-primary shadow-sm">
         <i class="bi bi-plus-lg me-1"></i> Create New
@@ -17,12 +17,12 @@
 <div class="card shadow-sm border-0">
     <div class="card-body p-0">
         <div class="table-responsive">
-            <table class="table  align-middle mb-0">
+            <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th class="ps-3">ISBN</th>
-                        <th>Title</th>
-                        <th>Summary</th>
+                        <th class="ps-3">Name</th>
+                        <th>Nationality</th>
+                        <th>Birth Date</th>
                         <th>Last Update</th>
                         <th>Status</th>
                         <th class="text-end pe-3">Actions</th>
@@ -32,15 +32,16 @@
             @foreach (var item in Model) {
                     <tr>
                         <td class="ps-3 fw-semibold">
-                            @item.Isbn
+                            @item.FirstName @item.LastName
                         </td>
                         <td>
-                            @item.Title
+                            <span class="badge bg-light text-dark border font-monospace">
+                                @(string.IsNullOrWhiteSpace(item.Nationality) ? "N/A" : item.Nationality)
+                            </span>
                         </td>
-                        <td class="text-muted small" style="max-width: 250px;">
-                            @item.Summary
+                        <td class="text-secondary small">
+                            <i class="bi bi-calendar-event me-1 text-muted"></i>@item.BirthDate.ToString("dd MMM yyyy")
                         </td>
-                        
                         <td class="text-secondary small">
                             @if (item.UpdatedAt.HasValue)
                             {
@@ -81,26 +82,24 @@
                                     </li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
-                                            @if (item.IsActive)
-                                            {
-                                                <form asp-action="Deactivate" asp-route-id="@item.Id" method="post" class="d-inline">
-                                                    <button type="submit" class="dropdown-item text-danger"
-                                                            onclick="return confirm('Are you sure you want to delete this book?');">
-                                                        <i class="bi bi-trash me-2"></i> Delete
-                                                    </button>
-                                                </form>
-
-                                                
-                                            } else
-                                            {
-                                                <form asp-action="Restore" asp-route-id="@item.Id" method="post" class="d-inline">
-                                                    <button type="submit" class="dropdown-item text-success"
-                                                            onclick="return confirm('Are you sure you want to activate this book?');">
-                                                        <i class="bi bi-arrow-counterclockwise me-2"></i> Activate
-                                                    </button>
-                                                </form>
-                                            }
-                                            
+                                        @if (item.IsActive)
+                                        {
+                                            <form asp-action="Deactivate" asp-route-id="@item.Id" method="post" class="d-inline">
+                                                <button type="submit" class="dropdown-item text-danger"
+                                                        onclick="return confirm('Are you sure you want to delete this author?');">
+                                                    <i class="bi bi-trash me-2"></i> Delete
+                                                </button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <form asp-action="Restore" asp-route-id="@item.Id" method="post" class="d-inline">
+                                                <button type="submit" class="dropdown-item text-success"
+                                                        onclick="return confirm('Are you sure you want to activate this author?');">
+                                                    <i class="bi bi-arrow-counterclockwise me-2"></i> Activate
+                                                </button>
+                                            </form>
+                                        }
                                     </li>
                                 </ul>
                             </div>
